@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data  # Persistent data storage
+
+  pgadmin:
+    image: dpage/pgadmin4:8.12.0
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: your_email@example.com  # Set your admin email
+      PGADMIN_DEFAULT_PASSWORD: your_pgadmin_password  # Set your admin password
+    ports:
+      - "8888:80"
+    depends_on:
+      - db
+
+volumes:
+  pg_data:
