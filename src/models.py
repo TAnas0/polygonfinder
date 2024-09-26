@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Float, CheckConstraint
 from .database import Base
 from geoalchemy2 import Geometry
 from sqlalchemy.orm import validates
+from shapely.geometry import shape
 
 from email_validator import (
     validate_email as validate_email_validator,
@@ -10,6 +11,7 @@ from email_validator import (
 import phonenumbers
 import iso639
 from forex_python.converter import CurrencyCodes
+import json
 
 
 CURRENCY_CODES = CurrencyCodes()
@@ -74,3 +76,17 @@ class ServiceArea(Base):
         if price <= 0:
             raise ValueError("Price must be a positive value")
         return price
+
+    @validates("geojson")
+    def validate_geojson(self, key, geojson):
+        try:
+            # Parse and validate the GeoJSON structure
+            geojson_dict = json.loads(geojson)
+            geometry = shape(geojson_dict["geometry"])
+
+            if geometry.geom_type != "Polygon":
+                raise ValueError("GeoJSON must represent a POLYGON")
+
+            return geojson
+        except (json.JSONDecodeError, KeyError, ValueError) as e:
+            raise ValueError(f"Invalid GeoJSON data: {e}")
