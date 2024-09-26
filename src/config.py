@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     postgres_db: str
     postgres_host: str
     postgres_port: int
+    postgres_test_port: int
 
     class Config:
         env_file = ".env"
