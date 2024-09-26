@@ -1,17 +1,61 @@
 from sqlalchemy import Column, Integer, String, Float
 from .database import Base
 from geoalchemy2 import Geometry
+from sqlalchemy.orm import validates
+
+from email_validator import (
+    validate_email as validate_email_validator,
+    EmailNotValidError,
+)
+import phonenumbers
+import iso639
+from forex_python.converter import CurrencyCodes
+
+
+CURRENCY_CODES = CurrencyCodes()
 
 
 class Provider(Base):
     __tablename__ = "providers"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    email = Column(String, unique=True, index=True)
+    name = Column(String, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
     phone_number = Column(String)
     language = Column(String)
     currency = Column(String)
+
+    @validates("email")
+    def validate_email(self, key, email):
+        try:
+            valid = validate_email_validator(email)
+            return valid.email
+        except EmailNotValidError as e:
+            raise ValueError(f"Invalid email: {e}")
+
+    @validates("phone_number")
+    def validate_phone_number(self, key, phone_number):
+        try:
+            phone = phonenumbers.parse(phone_number, None)
+            if not phonenumbers.is_valid_number(phone):
+                raise ValueError("Invalid phone number")
+            return phonenumbers.format_number(
+                phone, phonenumbers.PhoneNumberFormat.E164
+            )
+        except phonenumbers.NumberParseException:
+            raise ValueError("Invalid phone number format")
+
+    @validates("language")
+    def validate_language(self, key, language):
+        if not iso639.languages.get(part1=language):
+            raise ValueError("Invalid language code")
+        return language
+
+    @validates("currency")
+    def validate_currency(self, key, currency):
+        if not CURRENCY_CODES.get_symbol(currency):
+            raise ValueError("Invalid currency code")
+        return currency
 
 
 class ServiceArea(Base):
@@ -20,4 +64,4 @@ class ServiceArea(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     price = Column(Float)
-    geojson = Column(Geometry('POLYGON'))
+    geojson = Column(Geometry("POLYGON"))
