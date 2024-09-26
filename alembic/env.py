@@ -32,6 +32,60 @@ target_metadata = Base.metadata
 # ... etc.
 
 
+# Configure Alembic to ignore PostGIS-related tables
+POSTGIS_TABLES = [
+    "spatial_ref_sys",
+    "geometry_columns",
+    "geography_columns",
+    "raster_columns",
+    "raster_overviews",
+    "topology",
+    "layer",
+    "topology_id_seq",
+    'loader_lookuptables',
+    'pagc_rules',
+    'zip_state',
+    'secondary_unit_lookup',
+    'geocode_settings_default',
+    'place',
+    'loader_platform',
+    'zip_lookup',
+    'county',
+    'featnames',
+    'direction_lookup',
+    'cousub',
+    'edges',
+    'loader_variables',
+    'addrfeat',
+    'county_lookup',
+    'bg',
+    'addr',
+    'geocode_settings',
+    'faces',
+    'countysub_lookup',
+    'zip_lookup_all',
+    'pagc_gaz',
+    'state_lookup',
+    'tabblock20',
+    'zcta5',
+    'tract',
+    'pagc_lex',
+    'street_type_lookup',
+    'state',
+    'place_lookup',
+    'zip_state_loc',
+    'zip_lookup_base',
+    'tabblock',
+]
+
+
+def include_object(object, name, type_, reflected, compare_to):
+    """Should this table be managed by alembic or not?"""
+    if type_ == "table" and name in POSTGIS_TABLES:  # Add other PostGIS tables here if necessary
+        return False
+    return True
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
 
@@ -50,6 +104,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_object=include_object
     )
 
     with context.begin_transaction():
@@ -66,12 +121,14 @@ def run_migrations_online() -> None:
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
+        poolclass=pool.NullPool
     )
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata,
+            include_object=include_object
         )
 
         with context.begin_transaction():
