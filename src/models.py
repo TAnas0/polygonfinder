@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, CheckConstraint
 from .database import Base
 from geoalchemy2 import Geometry
 from sqlalchemy.orm import validates
@@ -62,6 +62,15 @@ class ServiceArea(Base):
     __tablename__ = "service_areas"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    price = Column(Float)
-    geojson = Column(Geometry("POLYGON"))
+    name = Column(String, index=True, nullable=False)
+    price = Column(Float, nullable=False)
+    geojson = Column(Geometry("POLYGON"), nullable=False)
+
+    # Ensure price is positive at the database level
+    __table_args__ = (CheckConstraint("price > 0", name="check_positive_price"),)
+
+    @validates("price")
+    def validate_price(self, key, price):
+        if price <= 0:
+            raise ValueError("Price must be a positive value")
+        return price
