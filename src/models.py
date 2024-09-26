@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float
 from .database import Base
+from geoalchemy2 import Geometry
 
 
 class Provider(Base):
@@ -19,4 +20,4 @@ class ServiceArea(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     price = Column(Float)
-    geojson = Column(String)  # TODO Improve storage to something more geoJson friendly
+    geojson = Column(Geometry('POLYGON'))
