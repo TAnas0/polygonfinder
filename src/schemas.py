@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, condecimal
 from typing import Optional
 
 
@@ -28,3 +28,28 @@ class Provider(ProviderBase):
 
     class Config:
         orm_mode = True
+
+
+# Schema for ServiceArea
+class ServiceAreaBase(BaseModel):
+    name: str
+    price: condecimal(gt=0)  # Ensure price is greater than 0
+    geojson: str  # You can replace this with a more complex type if needed
+
+
+class ServiceAreaCreate(ServiceAreaBase):
+    pass
+
+
+class ServiceAreaUpdate(ServiceAreaBase):
+    name: Optional[str] = None
+    price: Optional[condecimal(gt=0)] = None
+    geojson: Optional[str] = None
+
+
+class ServiceArea(ServiceAreaBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+        from_attributes = True
