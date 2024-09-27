@@ -17,9 +17,14 @@ This REST API helps you keep track of Service Areas and determine whether a geo 
 
 ## Getting Started
 
+You can quickly get started by running a single command: `docker-compose up -d`.
+This will launch a Postgres database with PostGIS installed, apply Alembic migrations on the database and serve the API.
+
+If you wish to run the API locally for the sake of easier development and debugging, you can proceed as follows:
+
 1. **Run the Postgres Database**:
 ```bash
-docker-compose up -d
+docker-compose up -d db pgadmin
 ```
 
 2. **Install Python dependencies**:
