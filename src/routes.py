@@ -14,6 +14,7 @@ from .schemas import (
     ServiceAreaUpdate,
 )
 from typing import List
+from sqlalchemy import func
 
 router = APIRouter()
 
@@ -119,3 +120,23 @@ def delete_service_area(service_area_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return service_area_to_dict(db_service_area)
+
+
+@router.get("/serviceareas/check/", response_model=List[ServiceAreaSchema])
+def check_point_in_service_area(lat: float, lng: float, db: Session = Depends(get_db)):
+    # Create a point geometry using the latitude and longitude
+    point = f"SRID=4326;POINT({lng} {lat})"
+
+    # Query the service areas to check if they contain the point
+    service_areas = db.query(ServiceArea).filter(
+        func.ST_Contains(
+            func.ST_Transform(ServiceArea.geojson, 4326),
+            func.ST_GeomFromText(point, 4326)
+        )
+    ).all()
+
+    # Check if any service areas were found
+    if not service_areas:
+        raise HTTPException(status_code=404, detail="No service area found for the given coordinates")
+
+    return [service_area_to_dict(sa) for sa in service_areas]
