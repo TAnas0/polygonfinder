@@ -51,6 +51,6 @@ jobs:
       run: |
         pip install pytest
         cp .env.sample .env
-        export POSTGRES_HOST=postgres
-        export POSTGRES_TEST_PORT=5433
+        export POSTGRES_HOST=127.0.0.1
+        export POSTGRES_TEST_PORT=5432
         pytest
