@@ -25,6 +25,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Wait for Postgres to be ready
+      run: |
+        until docker exec postgres pg_isready -U user; do
+          echo "Waiting for Postgres to be ready..."
+          sleep 5
+        done
+
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
