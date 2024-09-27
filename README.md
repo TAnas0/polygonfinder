@@ -44,20 +44,19 @@ Helps you keep track of Service Areas and determine whether a geo point falls wi
 
 ## Endpoints
 
-- **Providers**:
-    - `GET /providers`: List all providers
-    - `POST /providers`: Create a new provider
-    - `GET /providers/{id}`: Get details of a provider
-    - `PUT /providers/{id}`: Update a provider
-    - `DELETE /providers/{id}`: Delete a provider
+**Providers**:
+- `GET api/v1/providers`: List all providers
+- `POST api/v1/providers`: Create a new provider
+- `GET api/v1/providers/{id}`: Get details of a provider
+- `PUT api/v1/providers/{id}`: Update a provider
+- `DELETE /providers/{id}`: Delete a provider
 
-- **Service Areas**:
-    - `GET /service-areas`: List all service areas
-    - `POST /service-areas`: Create a new service area
-    - `GET /service-areas/{id}`: Get details of a service area
-    - `PUT /service-areas/{id}`: Update a service area
-    - `DELETE /service-areas/{id}`: Delete a service area
-    - `GET /service-areas/search?lat={latitude}&lng={longitude}`: Find service areas containing a specific geo point
+**Service Areas**:
+- `GET api/v1/service-areas`: List all service areas
+- `POST api/v1/service-areas`: Create a new service area
+- `GET api/v1/service-areas/{id}`: Get details of a service area
+- `PUT api/v1/service-areas/{id}`: Update a service area
+- `DELETE api/v1/service-areas/{id}`: Delete a service area
 
 ## Testing
 
