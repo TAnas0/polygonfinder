@@ -14,7 +14,7 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: database
         ports:
-          - 5433:5432
+          - 5432:5432
         options: >-
           --health-cmd="pg_isready -U user"
           --health-interval=10s
@@ -27,7 +27,7 @@ jobs:
 
     - name: Wait for Postgres to be ready
       run: |
-        until curl -s --connect-timeout 5 postgres:5433; do
+        until curl -s --connect-timeout 5 postgres:5432; do
           echo "Waiting for Postgres to be ready..."
           sleep 5
         done
