@@ -44,4 +44,6 @@ jobs:
       run: |
         pip install pytest
         cp .env.sample .env
+        export POSTGRES_HOST=db
+        export POSTGRES_TEST_PORT=5433
         pytest
