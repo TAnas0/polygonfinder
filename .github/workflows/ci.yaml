@@ -44,12 +44,10 @@ jobs:
 
     - name: Check linting
       run: |
-        pip install flake8
         flake8 .
 
     - name: Run tests
       run: |
-        pip install pytest
         cp .env.sample .env
         export POSTGRES_HOST=127.0.0.1
         export POSTGRES_TEST_PORT=5432
