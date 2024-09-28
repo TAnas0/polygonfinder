@@ -122,7 +122,7 @@ def delete_service_area(service_area_id: int, db: Session = Depends(get_db)):
     return service_area_to_dict(db_service_area)
 
 
-@router.get("/serviceareas/check/", response_model=List[ServiceAreaSchema])
+@router.get("/serviceareas/check", response_model=List[ServiceAreaSchema])
 def check_point_in_service_area(lat: float, lng: float, db: Session = Depends(get_db)):
     # Create a point geometry using the latitude and longitude
     point = f"SRID=4326;POINT({lng} {lat})"

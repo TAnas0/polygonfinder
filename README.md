@@ -68,6 +68,18 @@ uvicorn src.main:app --reload
 
 ## Testing
 
+To test using `curl` commands, you can try creating a Service Area, and check if a latitude/longitude pair is contained in the registered Service Areas:
+
+```bash
+curl -X 'POST'   'http://127.0.0.1:8000/api/v1/serviceareas/'   -H 'Content-Type: application/json'   -d '{
+  "name": "Downtown Area 2",
+  "price": 25.50,
+  "geojson": "{\"type\": \"Polygon\", \"coordinates\": [[[30.0, 10.0], [40.0, 40.0], [20.0, 40.0], [10.0, 20.0], [30.0, 10.0]]]}"
+}'
+
+curl -X GET "http://localhost:8000/api/v1/serviceareas/check?lat=30&lng=20"
+```
+
 To run the unit tests:
 ```bash
 pytest

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, CheckConstraint
 from .database import Base
-from geoalchemy2 import Geometry
+from geoalchemy2 import Geometry, shape
 from sqlalchemy.orm import validates
 from shapely.geometry import shape
 
@@ -81,8 +81,8 @@ class ServiceArea(Base):
     def validate_geojson(self, key, geojson):
         try:
             # Parse and validate the GeoJSON structure
-            geojson_dict = json.loads(geojson)
-            geometry = shape(geojson_dict["geometry"])
+            from geoalchemy2.shape import to_shape
+            geometry = to_shape(geojson)
 
             if geometry.geom_type != "Polygon":
                 raise ValueError("GeoJSON must represent a POLYGON")
