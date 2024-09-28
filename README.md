@@ -87,4 +87,19 @@ pytest
 
 ## Deployment
 
-<!-- TODO -->
+We recommend you stick to the Docker Copose setup to deploy the API on an AWS EC2 instance: `docker-compose build -d`.
+This will include the Postgres database, run the Alembic migrations to create the database schema, and serve the PolygonFinder API.
+
+You can find an example hosted online at `http://13.51.79.167:8000`.
+
+You can try it out with the following `curl` commands:
+
+```bash
+curl -X 'POST'   'http://13.51.79.167:8000/api/v1/serviceareas/'   -H 'Content-Type: application/json'   -d '{
+  "name": "Downtown Area",
+  "price": 25.50,
+  "geojson": "{\"type\": \"Polygon\", \"coordinates\": [[[30.0, 10.0], [40.0, 40.0], [20.0, 40.0], [10.0, 20.0], [30.0, 10.0]]]}"
+}'
+
+curl -X GET "http://13.51.79.167:8000/api/v1/serviceareas/check?lat=30&lng=200"
+```
