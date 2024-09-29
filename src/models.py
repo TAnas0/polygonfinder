@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, CheckConstraint
 from .database import Base
-from geoalchemy2 import Geometry, shape
+from geoalchemy2 import Geometry
 from sqlalchemy.orm import validates
-from shapely.geometry import shape
 
 from email_validator import (
     validate_email as validate_email_validator,
@@ -82,6 +81,7 @@ class ServiceArea(Base):
         try:
             # Parse and validate the GeoJSON structure
             from geoalchemy2.shape import to_shape
+
             geometry = to_shape(geojson)
 
             if geometry.geom_type != "Polygon":
