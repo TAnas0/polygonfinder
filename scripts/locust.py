@@ -5,6 +5,7 @@ import random
 lat_steps = 40  # Number of steps in the latitude direction
 lng_steps = 80  # Number of steps in the longitude direction
 
+
 class ServiceAreaUser(HttpUser):
     wait_time = between(1, 2)
 
